@@ -1,74 +1,30 @@
+name: Build and Push Docker Image
+
 on:
   push:
     paths:
       - '*'
       - '**/*'  # Trigger on changes in all subdirectories only if there is a change
     branches:
-      - k8s_deploy
       - main
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14'
+      - name: Build Docker image
+        run: docker build -t thaais1/cronJob-h24-grp2-eq3:latest .
+      
+      - name: Log in to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: thameur.aissaoui@gmail.com
+          password: Canada2018!
 
-    - name: Install dependencies
-      run: npm install
-
-  test:
-    runs-on: ubuntu-latest
-
-    needs: build
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run tests
-      run: npm test
-
-  push:
-    runs-on: ubuntu-latest
-
-    needs: test
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Log in to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: thameur.aissaoui@gmail.com
-        password: Canada2018!
-    - name: Build and Push Docker image
-      uses: docker/build-push-action@v2
-      with:
-          context: .
-          push: true
-          tags: thaais1/metrics-h24-grp2-eq3:latest
-
-    # Add Kubernetes deployment step
-    - name: Configure kubectl
-      uses: azure/k8s-set-context@v1
-      with:
-        kubeconfig: ${{ secrets.KUBECONFIG }}
-
-    - name: Deploy to Kubernetes
-      run: kubectl apply -f metrics-deployment.yaml
+      - name: Push Docker image to DockerHub
+        run: docker push thaais1/cronJob-h24-grp2-eq3:latest
