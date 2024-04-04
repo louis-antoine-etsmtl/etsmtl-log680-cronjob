@@ -27,4 +27,4 @@ jobs:
           password: Canada2018!
 
       - name: Push Docker image to DockerHub
-        run: docker push thaais1/cronJob-h24-grp2-eq3:latest
+        run: docker push thaais1/cronjob-h24-grp2-eq3:latest
