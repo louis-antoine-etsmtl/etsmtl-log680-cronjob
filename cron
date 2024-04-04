@@ -1,1 +1,1 @@
-* * * * * /home/cronjob.sh http://metrics-api:3000/snapshot > /var/log/cron
+* * * * * /home/cronjob.sh http://146.190.191.28/user02eq3/metrics/metriquesKanban/snapshot > /var/log/cron
