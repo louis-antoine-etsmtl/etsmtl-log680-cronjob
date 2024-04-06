@@ -1,1 +1,1 @@
-*/30 * * * * /home/cronjob.sh http://146.190.191.28/user02eq3/metrics/metriquesKanban/taskCount/colonne?colonne=open > /var/log/cron
+* * * * * /home/cronjob.sh http://146.190.191.28/user02eq3/metrics/metriquesKanban/taskCount/colonne?colonne=open > /var/log/cron

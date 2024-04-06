@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata: 
+  name: cron
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 72000
+      template: 
+        spec:
+          containers:
+          - name: cron
+            image: thaais1/cronjob-h24-grp2-eq3
+            command: 
+              - "/bin/sh"
+              - "-c"
+              - "/home/cronjob.sh http://146.190.191.28/user02eq3/metrics/metriquesKanban/snapshot > /var/log/cron"
+          restartPolicy: OnFailure
+    backoffLimit: 3
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: cron
+  labels:
+    app: cron
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cron
+  template:
+    metadata:
+      labels:
+        app: cron
+    spec:
+      containers:
+      - name: cron
+        image: thaais1/cronjob-h24-grp2-eq3
+        imagePullPolicy: Always  # Ensure Kubernetes always checks for a new image               
+        ports:
+        - containerPort: 84
+        resources:
+          requests:
+            cpu: "10m"  # Requesting 100 millicores (0.1 cores) of CPU
+            memory: "64Mi"  # Requesting 64 Mebibytes of memory
+          limits:
+            cpu: "20m"  # Limiting to 200 millicores (0.2 cores) of CPU
+            memory: "64Mi"  # Limiting to 128 Mebibytes of memory    
